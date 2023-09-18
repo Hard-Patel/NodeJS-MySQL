@@ -10,7 +10,6 @@ function auth(req, res, next) {
   }
   try {
     const decoded = jwt.verify(token, "myPrivateKey");
-    console.log("decoded: ", decoded);
     const findQuery = "SELECT * FROM users WHERE id = ?";
     connection.query(findQuery, [decoded.id], (err, data) => {
       if (err || !data.length) {

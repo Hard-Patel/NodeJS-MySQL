@@ -50,7 +50,6 @@ exports.createUser = async (req, res) => {
       );
     });
   } catch (e) {
-    console.log("e: ", e);
     return res.status(500).send({ message: "Something went wrong1" });
   }
 };

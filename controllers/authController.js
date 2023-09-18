@@ -11,17 +11,14 @@ exports.loginUserController = async (req, res) => {
       .send({ message: "Invalid request", errors: error.array() });
   }
   const { email, password } = req.body;
-  console.log("password: ", password);
   try {
     const findQuery = "SELECT * FROM users WHERE email = ?";
     connection.query(findQuery, [email], async (err, data) => {
       if (err || data.length == 0) {
         return res.status(500).send({ message: "User doesn't exist" });
       }
-      console.log('data: ', data);
       const { name, email, isAdmin, password: dbPwd, id } = data[0];
       const isValid = await bcrypt.compare(req.body.password, dbPwd);
-      console.log("isValid: ", isValid);
       if (!isValid) {
         return res.send({
           message: "Invalid username or password",

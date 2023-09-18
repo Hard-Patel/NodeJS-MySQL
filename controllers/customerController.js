@@ -46,7 +46,6 @@ exports.createCustomer = async (req, res) => {
 
     connection.query(createTableQuery, (err, result) => {
       if (err) {
-        console.log("err: ", err);
         return res
           .status(500)
           .send({ message: "Error while creating the table" });
@@ -87,7 +86,6 @@ exports.updateCustomer = async (req, res) => {
       [req.body.name, req.body.isGold, req.body.phone, req.params.id],
       (err, result) => {
         if (err && result?.affectedRows != 0) {
-          console.log("err: ", err);
           return res.status(400).send({ message: "Customer doesn't exist" });
         }
         return res.send({

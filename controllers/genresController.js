@@ -11,7 +11,6 @@ exports.getGenres = async (req, res) => {
       res.send({ message: "Genres fetched successfully", data: data });
     });
   } catch (e) {
-    console.log("Error: ", e);
   }
 };
 
@@ -19,7 +18,6 @@ exports.getOneGenre = async (req, res) => {
   try {
     const findQuery = `SELECT * FROM genres WHERE id=?`;
     connection.query(findQuery, [req.params.id], (err, data) => {
-      console.log("data: ", data);
       if (err || data.length == 0) {
         return res.status(404).send({ message: "Genre doesn't exist" });
       }
@@ -54,7 +52,6 @@ exports.createGenre = async (req, res) => {
             INSERT INTO ${tableName} (genre) VALUES ('${req.body.genre}')`;
 
         connection.query(insertDataQuery, (err, data) => {
-          console.log("fields: ", data.insertId);
           if (err) {
             return res.status(400).send({ message: "Something went wrong" });
           }
