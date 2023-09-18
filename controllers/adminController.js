@@ -1,5 +1,6 @@
 require("dotenv").config();
 const connection = require("../connection");
+const fs = require("fs");
 
 exports.uploadImageController = async (req, res) => {
   if (!req.file) {
@@ -43,11 +44,27 @@ exports.retrieveImages = async (req, res) => {
   try {
     const fetchQuery = `SELECT files.*, users.name as 'uploaded by' FROM files INNER JOIN users WHERE files.admin_id = users.id`;
     connection.query(fetchQuery, (err, data) => {
-        if (err) {
+      if (err) {
         return res.status(500).send({ message: "Something went wrong" });
       }
       res.send({ message: "List fetched successfully", data });
     });
+  } catch (e) {
+    return res.status(500).send({ message: "Something went wrong" });
+  }
+};
+
+exports.downloadImage = async (req, res) => {
+  try {
+    const imagePath = `D:/NodeJS/NodeJS-MySQL/uploads/1695057256458-ups.png`; // Replace with the actual image filename
+
+    // Set the response headers for the image download
+    res.setHeader("Content-Disposition", "attachment; filename=1695057256458-ups.jpg"); // Replace with the actual image filename
+    res.setHeader("Content-Type", "image/jpeg");
+
+    // Stream the image file to the response
+    const fileStream = fs.createReadStream(imagePath);
+    fileStream.pipe(res);
   } catch (e) {
     return res.status(500).send({ message: "Something went wrong" });
   }

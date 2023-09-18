@@ -1,5 +1,5 @@
 const express = require("express");
-const { uploadImageController, retrieveImages } = require("../controllers/adminController");
+const { uploadImageController, retrieveImages, downloadImage } = require("../controllers/adminController");
 const { admin } = require("../middleware/admin");
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
@@ -25,6 +25,12 @@ router.get(
   "/list-images",
   [auth],
   retrieveImages
+);
+
+router.get(
+  "/download-image",
+  // [auth],
+  downloadImage
 );
 
 module.exports = router;
