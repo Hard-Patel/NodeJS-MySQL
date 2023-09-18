@@ -3,12 +3,16 @@ const connection = require("../connection");
 
 exports.getGenres = async (req, res) => {
   const query = "SELECT * FROM genres";
-  connection.query(query, (err, data) => {
-    if (err) {
-      return res.status(404).send({ message: "Not found", data: [] });
-    }
-    res.send({ message: "Genres fetched successfully", data: data });
-  });
+  try {
+    connection.query(query, (err, data) => {
+      if (err) {
+        return res.status(404).send({ message: "Not found", data: [] });
+      }
+      res.send({ message: "Genres fetched successfully", data: data });
+    });
+  } catch (e) {
+    console.log("Error: ", e);
+  }
 };
 
 exports.getOneGenre = async (req, res) => {

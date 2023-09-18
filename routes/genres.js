@@ -1,7 +1,5 @@
 const express = require("express");
-const connection = require("../connection");
 const router = express.Router();
-const { body, validationResult } = require("express-validator");
 const genre = require("../validation/genres");
 const { auth } = require("../middleware/auth");
 const { admin } = require("../middleware/admin");
