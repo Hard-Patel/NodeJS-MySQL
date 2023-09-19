@@ -7,6 +7,7 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const admin = require("./routes/admin.js");
 const bodyParser = require("body-parser");
+const handleErrors = require('./utils/errors');
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use("/api/customers", customers);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 app.use("/api/admin", admin);
+
+app.use(handleErrors)
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

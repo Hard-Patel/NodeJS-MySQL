@@ -1,16 +1,27 @@
 const { validationResult } = require("express-validator");
 const connection = require("../connection");
+const { ErrorMessages, StatusCodes, APIError } = require("../utils/constants");
+const { buildError } = require("../utils/errorBuilder");
 
-exports.getGenres = async (req, res) => {
+exports.getGenres = async (req, res, next) => {
   const query = "SELECT * FROM genres";
   try {
+    // throw new Error(APIError.NOT_FOUND)
     connection.query(query, (err, data) => {
       if (err) {
-        return res.status(404).send({ message: "Not found", data: [] });
+        return buildError(
+          res,
+          APIError.NOT_FOUND,
+          ErrorMessages.NOT_FOUND,
+          StatusCodes.BAD_REQUEST,
+          { fields: "Error in validation" }
+        );
       }
       res.send({ message: "Genres fetched successfully", data: data });
     });
   } catch (e) {
+    console.log("e: ", e);
+    res.send({ message: "Something went wrong" });
   }
 };
 
