@@ -1,9 +1,20 @@
+const { APIError, ErrorMessages } = require("../utils/constants");
+const CommonErrorHandler = require("../utils/errors");
+
 function admin(req, res, next) {
-  const {isAdmin} = req.user;
-  if (!isAdmin) {
-    return res.status(403).send({ message: "Permission not allowed" });
+  try {
+    const { isAdmin } = req.user;
+    if (!isAdmin) {
+      return CommonErrorHandler(
+        res,
+        APIError.UNAUTHORISED_ACCESS,
+        ErrorMessages.PERMISSION_NOT_ALLOWED
+      );
+    }
+    next();
+  } catch (e) {
+    return CommonErrorHandler(res);
   }
-  next();
 }
 
 exports.admin = admin;

@@ -1,27 +1,33 @@
 const jwt = require("jsonwebtoken");
 const connection = require("../connection");
+const { APIError, ErrorMessages } = require("../utils/constants");
+const CommonErrorHandler = require("../utils/errors");
 
 function auth(req, res, next) {
   const token = req.header("x-auth-token");
   if (!token) {
-    return res
-      .status(401)
-      .send({ message: "Access denied. No token provided" });
+    return CommonErrorHandler(
+      res,
+      APIError.UNAUTHORISED_ACCESS,
+      ErrorMessages.NO_TOKEN_PROVIDED
+    );
   }
   try {
     const decoded = jwt.verify(token, "myPrivateKey");
     const findQuery = "SELECT * FROM users WHERE id = ?";
     connection.query(findQuery, [decoded.id], (err, data) => {
       if (err || !data.length) {
-        return res
-          .status(404)
-          .send({ message: "Invalid token or User does not exist" });
+        return CommonErrorHandler(
+          res,
+          APIError.UNAUTHORISED_ACCESS,
+          ErrorMessages.INVALID_TOKEN
+        );
       }
       req.user = data[0];
       next();
     });
   } catch (e) {
-    return res.status(400).send({ message: "Invalid token" });
+    return CommonErrorHandler(res);
   }
 }
 

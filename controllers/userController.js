@@ -2,13 +2,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const connection = require("../connection");
+const CommonErrorHandler = require("../utils/errors");
+const { APIError, ErrorMessages } = require("../utils/constants");
 
 exports.createUser = async (req, res) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    return res
-      .status(404)
-      .send({ message: "Invalid request", errors: error.array() });
+    return CommonErrorHandler(
+      res,
+      APIError.BAD_REQUEST,
+      ErrorMessages.VALIDATION_ERROR,
+      undefined,
+      { message: "Invalid request", errors: error.array() }
+    );
   }
 
   try {
@@ -24,7 +30,7 @@ exports.createUser = async (req, res) => {
                                 isAdmin TINYINT(1) DEFAULT 0)`;
     connection.query(createTableQuery, (err, data) => {
       if (err) {
-        return res.status(500).send({ message: "Something went wrong" });
+        return CommonErrorHandler(res)
       }
       const insertQuery =
         "INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, ?)";
@@ -35,11 +41,9 @@ exports.createUser = async (req, res) => {
         async (err, data) => {
           if (err) {
             if (err.code == "ER_DUP_ENTRY") {
-              return res
-                .status(400)
-                .send({ message: "Email address already registered" });
+              return CommonErrorHandler(res, APIError.BAD_REQUEST, ErrorMessages.EMAIL_ALREADY_EXISTS);
             }
-            return res.status(500).send({ message: "Something went wrong" });
+            return CommonErrorHandler(res);
           }
           const token = jwt.sign({ id: data?.insertId }, "myPrivateKey");
           return res.header("x-auth-token", token).send({
@@ -50,6 +54,6 @@ exports.createUser = async (req, res) => {
       );
     });
   } catch (e) {
-    return res.status(500).send({ message: "Something went wrong1" });
+    return CommonErrorHandler(res);
   }
 };

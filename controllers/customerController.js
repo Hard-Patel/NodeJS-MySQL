@@ -1,12 +1,14 @@
 const { validationResult } = require("express-validator");
 const connection = require("../connection");
+const CommonErrorHandler = require("../utils/errors");
+const { APIError, ErrorMessages, StatusCodes } = require("../utils/constants");
 
 exports.getCustomer = async (req, res) => {
   try {
     const fetchCustomer = "SELECT * FROM customers";
     connection.query(fetchCustomer, (err, data) => {
       if (err) {
-        return res.status(500).send({ message: "Server error" });
+        return CommonErrorHandler(res);
       }
       return res.send({
         message: "Customers fetched successfully",
@@ -14,7 +16,7 @@ exports.getCustomer = async (req, res) => {
       });
     });
   } catch (e) {
-    return res.status(500).send({ message: "Server error" });
+    return CommonErrorHandler(res);
   }
 };
 
@@ -23,19 +25,26 @@ exports.getOneCustomer = async (req, res) => {
     const findQuery = `SELECT * FROM customers WHERE id=?`;
     connection.query(findQuery, [req.params.id], (err, data) => {
       if (err || !data.length) {
-        return res.status(404).send({ message: "Customer doesn't exist" });
+        return CommonErrorHandler(
+          res,
+          APIError.NOT_FOUND,
+          ErrorMessages.CUSTOMER_DOES_NOT_EXISTS
+        );
       }
       res.send({ message: "Customer found successfully", data: data[0] });
     });
   } catch (e) {
-    return res.status(404).send({ message: "Customer doesn't exists" });
+    return CommonErrorHandler(res);
   }
 };
 
 exports.createCustomer = async (req, res) => {
   const error = validationResult(req);
 
-  if (!error.isEmpty()) return res.status(401).send({ message: error.array() });
+  if (!error.isEmpty())
+    return CommonErrorHandler(APIError.BAD_REQUEST, undefined, undefined, {
+      errors: error.array(),
+    });
 
   try {
     const tableName = "customers";
@@ -46,9 +55,7 @@ exports.createCustomer = async (req, res) => {
 
     connection.query(createTableQuery, (err, result) => {
       if (err) {
-        return res
-          .status(500)
-          .send({ message: "Error while creating the table" });
+        return CommonErrorHandler(res);
       }
       const insertData =
         "INSERT INTO customers (name, isGold, phone) VALUES (?, ?, ?)";
@@ -57,9 +64,7 @@ exports.createCustomer = async (req, res) => {
         [req.body.name, req.body.isGold, req.body.phone],
         (err, result) => {
           if (err) {
-            return res
-              .status(400)
-              .send({ message: "Failed to insert the data" });
+            return CommonErrorHandler(res);
           }
           return res.send({
             data: result,
@@ -69,14 +74,22 @@ exports.createCustomer = async (req, res) => {
       );
     });
   } catch (e) {
-    res.status(400).send({ message: "Something went wrong" });
+    return CommonErrorHandler(res);
   }
 };
 
 exports.updateCustomer = async (req, res) => {
   const error = validationResult(req);
 
-  if (!error.isEmpty()) return res.status(401).send({ message: error.array() });
+  if (!error.isEmpty())
+    return CommonErrorHandler(
+      APIError.BAD_REQUEST,
+      ErrorMessages.VALIDATION_ERROR,
+      undefined,
+      {
+        message: error.array(),
+      }
+    );
 
   try {
     const tableName = "customers";
@@ -86,7 +99,11 @@ exports.updateCustomer = async (req, res) => {
       [req.body.name, req.body.isGold, req.body.phone, req.params.id],
       (err, result) => {
         if (err && result?.affectedRows != 0) {
-          return res.status(400).send({ message: "Customer doesn't exist" });
+          return CommonErrorHandler(
+            APIError.BAD_REQUEST,
+            ErrorMessages.CUSTOMER_DOES_NOT_EXISTS,
+            StatusCodes.BAD_REQUEST
+          );
         }
         return res.send({
           data: result,
@@ -95,7 +112,7 @@ exports.updateCustomer = async (req, res) => {
       }
     );
   } catch (e) {
-    res.status(400).send({ message: "Something went wrong" });
+    return CommonErrorHandler(res);
   }
 };
 
@@ -104,7 +121,10 @@ exports.deleteCustomer = async (req, res) => {
     const deleteQuery = "DELETE FROM customers WHERE id=?";
     connection.query(deleteQuery, [req.params.id], (err, data) => {
       if (err || data.affectedRows == 0) {
-        return res.status(400).send({ message: "Customer doesn't exist" });
+        return CommonErrorHandler(
+          APIError.BAD_REQUEST,
+          ErrorMessages.CUSTOMER_DOES_NOT_EXISTS
+        );
       }
       return res.send({
         data: data,
@@ -112,6 +132,6 @@ exports.deleteCustomer = async (req, res) => {
       });
     });
   } catch (e) {
-    return res.status(404).send({ message: `Customer doesn't exists` });
+    return CommonErrorHandler(res);
   }
 };

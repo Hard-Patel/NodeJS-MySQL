@@ -1,0 +1,46 @@
+const ERROR_MESSAGES = {};
+ERROR_MESSAGES.VALIDATION_ERROR = "Validation error";
+ERROR_MESSAGES.BAD_REQUEST = "Bad request";
+ERROR_MESSAGES.UNAUTHORISED_ACCESS = "Unauthorised access";
+ERROR_MESSAGES.NO_TOKEN_PROVIDED = "Access denied. No token provided";
+ERROR_MESSAGES.INVALID_TOKEN = "Invalid token or User doesn't exists";
+ERROR_MESSAGES.PERMISSION_NOT_ALLOWED = "Permission Not Allowed";
+ERROR_MESSAGES.PAYMENT_REQUIRED = "Payment required";
+ERROR_MESSAGES.FORBIDDEN = "Forbidden error";
+ERROR_MESSAGES.NOT_FOUND = "Not found";
+ERROR_MESSAGES.METHOD_NOT_ALLOWED = "Method not allowed";
+ERROR_MESSAGES.NOT_ACCEPTABLE = "Not acceptable";
+ERROR_MESSAGES.REQUEST_TIMEOUT = "Request Timeout";
+ERROR_MESSAGES.CONFLICT = "Request Conflict";
+ERROR_MESSAGES.UNAUTHORISED_ACCESS = "Request could not be processed";
+ERROR_MESSAGES.SOMETHING_WENT_WRONG = "Something went wrong";
+ERROR_MESSAGES.INTERNAL_SERVER_ERROR = "Internal server error";
+ERROR_MESSAGES.GENRE_DOES_NOT_EXISTS = "Genre doesn't exists";
+ERROR_MESSAGES.CUSTOMER_DOES_NOT_EXISTS = "Customer doesn't exists";
+ERROR_MESSAGES.USER_DOES_NOT_EXISTS = "User doesn't exists";
+ERROR_MESSAGES.EMAIL_ALREADY_EXISTS = "Email address already registered";
+ERROR_MESSAGES.INVALID_USERNAME_PASSWORD = "Invalid username or password";
+ERROR_MESSAGES.NO_FILE_PROVIDED = "No file provided to upload";
+
+const StatusCodes = {};
+StatusCodes.BAD_REQUEST = 400;
+StatusCodes.UNAUTHORISED_ACCESS = 401;
+StatusCodes.PAYMENT_REQUIRED = 402;
+StatusCodes.FORBIDDEN = 403;
+StatusCodes.NOT_FOUND = 404;
+StatusCodes.METHOD_NOT_ALLOWED = 405;
+StatusCodes.NOT_ACCEPTABLE = 406;
+StatusCodes.REQUEST_TIMEOUT = 408;
+StatusCodes.CONFLICT = 409;
+StatusCodes.UNPROCESSABLE_CONTENT = 422;
+StatusCodes.INTERNAL_SERVER_ERROR = 500;
+
+const APIError = {};
+APIError.NOT_FOUND = "Resource Not Found";
+APIError.BAD_REQUEST = "Bad request";
+APIError.INTERNAL_SERVER_ERROR = "Internal Server Error";
+APIError.UNAUTHORISED_ACCESS = "Unauthorised access denied";
+
+exports.ErrorMessages = ERROR_MESSAGES;
+exports.StatusCodes = StatusCodes;
+exports.APIError = APIError;

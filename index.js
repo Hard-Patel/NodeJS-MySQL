@@ -7,6 +7,7 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const admin = require("./routes/admin.js");
 const bodyParser = require("body-parser");
+const handleErrors = require('./utils/errors');
 
 const app = express();
 
