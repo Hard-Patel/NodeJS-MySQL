@@ -9,8 +9,8 @@ const router = express.Router();
 const storage = multer.diskStorage({
   destination: "./uploads/", // Specify the folder where uploaded files will be stored
   filename: (req, file, callback) => {
-    callback(null, `${Date.now()}-${file.originalname}`); // Set the file name to be unique
-  },
+    callback(null, `${Date.now()}-${file?.originalname}`); // Set the file name to be unique
+  }
 });
 
 const upload = multer({ storage });

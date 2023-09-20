@@ -1,4 +1,5 @@
 const ERROR_MESSAGES = {};
+ERROR_MESSAGES.VALIDATION_ERROR = "Validation error";
 ERROR_MESSAGES.BAD_REQUEST = "Bad request";
 ERROR_MESSAGES.UNAUTHORISED_ACCESS = "Unauthorised access";
 ERROR_MESSAGES.NO_TOKEN_PROVIDED = "Access denied. No token provided";
@@ -17,6 +18,9 @@ ERROR_MESSAGES.INTERNAL_SERVER_ERROR = "Internal server error";
 ERROR_MESSAGES.GENRE_DOES_NOT_EXISTS = "Genre doesn't exists";
 ERROR_MESSAGES.CUSTOMER_DOES_NOT_EXISTS = "Customer doesn't exists";
 ERROR_MESSAGES.USER_DOES_NOT_EXISTS = "User doesn't exists";
+ERROR_MESSAGES.EMAIL_ALREADY_EXISTS = "Email address already registered";
+ERROR_MESSAGES.INVALID_USERNAME_PASSWORD = "Invalid username or password";
+ERROR_MESSAGES.NO_FILE_PROVIDED = "No file provided to upload";
 
 const StatusCodes = {};
 StatusCodes.BAD_REQUEST = 400;
